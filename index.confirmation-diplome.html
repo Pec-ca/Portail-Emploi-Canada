@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Paiement Confirmé — Authentification de Diplôme</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --rouge: #c0392b;
+      --or: #d4a843;
+      --vert: #2e7d32;
+      --vert-bg: #f1f8f1;
+      --vert-bord: #a5d6a7;
+      --blanc: #fafaf8;
+      --texte: #1a1a1a;
+      --gris: #5a5a5a;
+      --bordure: #e8e3db;
+    }
+
+    body {
+      background: var(--blanc);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--texte);
+      padding: 1.5rem 1rem 2rem;
+    }
+
+    .carte {
+      background: #fff;
+      border: 1px solid var(--bordure);
+      border-radius: 8px;
+      max-width: 520px;
+      width: 100%;
+      margin: 0 auto;
+      overflow: hidden;
+      box-shadow: 0 2px 20px rgba(0,0,0,0.07);
+      animation: apparaitre 0.6s cubic-bezier(0.22,1,0.36,1) both;
+    }
+
+    @keyframes apparaitre {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Bande haut */
+    .bande-haut {
+      height: 5px;
+      background: linear-gradient(90deg, var(--rouge), var(--or), var(--rouge));
+    }
+
+    .corps {
+      padding: 2rem 1.5rem;
+    }
+
+    /* En-tête : icône + titre */
+    .entete {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .icone {
+      width: 60px; height: 60px;
+      background: #fff5f5;
+      border: 1.5px solid #f5c6c6;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+      animation: pop 0.5s 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.4); opacity: 0; }
+      to   { transform: scale(1);   opacity: 1; }
+    }
+
+    .icone svg { width: 30px; height: 30px; }
+
+    .badge {
+      display: inline-block;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--rouge);
+      background: rgba(192,57,43,0.08);
+      padding: 0.25rem 0.8rem;
+      border-radius: 2px;
+      margin-bottom: 0.8rem;
+    }
+
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: var(--texte);
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+
+    .trait {
+      width: 32px; height: 2px;
+      background: var(--or);
+      margin: 0 auto;
+      border-radius: 2px;
+    }
+
+    /* Séparateur */
+    .sep {
+      border: none;
+      border-top: 1px solid var(--bordure);
+      margin: 1.4rem 0;
+    }
+
+    /* Message de confirmation paiement */
+    .msg-paiement {
+      font-size: 0.9rem;
+      color: var(--gris);
+      line-height: 1.65;
+      text-align: center;
+      margin-bottom: 0;
+    }
+
+    .msg-paiement strong {
+      color: var(--texte);
+      font-weight: 500;
+    }
+
+    /* ===== BLOC VERT — MESSAGE DE CONFIANCE ===== */
+    .bloc-vert {
+      background: var(--vert-bg);
+      border: 1px solid var(--vert-bord);
+      border-left: 4px solid var(--vert);
+      border-radius: 4px;
+      padding: 1.1rem 1.2rem;
+      margin-top: 1.4rem;
+      text-align: left;
+    }
+
+    .bloc-vert .titre-bloc {
+      font-size: 0.7rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--vert);
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .bloc-vert p {
+      font-size: 0.88rem;
+      color: #333;
+      line-height: 1.7;
+      margin-bottom: 0.9rem;
+    }
+
+    .bloc-vert strong {
+      color: var(--texte);
+      font-weight: 500;
+    }
+
+    .signature {
+      border-top: 1px solid var(--vert-bord);
+      padding-top: 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.15rem;
+    }
+
+    .signature .cordialement {
+      font-size: 0.8rem;
+      color: #666;
+      font-style: italic;
+    }
+
+    .signature .org {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--rouge);
+    }
+
+    .signature a {
+      font-size: 0.78rem;
+      color: #555;
+      text-decoration: none;
+    }
+
+    .signature a:hover {
+      color: var(--rouge);
+      text-decoration: underline;
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      margin-top: 1.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--bordure);
+      font-family: 'Playfair Display', serif;
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+
+    .footer strong { color: var(--rouge); }
+  </style>
+</head>
+<body>
+
+  <div class="carte">
+    <div class="bande-haut"></div>
+    <div class="corps">
+
+      <!-- En-tête -->
+      <div class="entete">
+        <div class="icone">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#c0392b" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/>
+            <polyline points="22 4 12 14.01 9 11.01"/>
+          </svg>
+        </div>
+        <div class="badge">Paiement confirmé</div>
+        <h1>Merci pour votre paiement</h1>
+        <div class="trait"></div>
+      </div>
+
+      <hr class="sep">
+
+      <!-- Message paiement reçu -->
+      <p class="msg-paiement">
+        Votre paiement des <strong>frais d'authentification de diplôme étranger (EDE/ECA)</strong> a bien été reçu.
+      </p>
+
+      <!-- Bloc vert message de confiance -->
+      <div class="bloc-vert">
+        <div class="titre-bloc">
+          <span>✅</span> Information importante
+        </div>
+        <p>
+          Votre demande d'authentification de diplôme est prise en charge et sera traitée sous <strong>24 à 48h ouvrables</strong>. Le résultat de l'authentification vous sera transmis par <strong>WhatsApp ou email</strong> sous 48h.
+        </p>
+        <div class="signature">
+          <span class="cordialement">Cordialement,</span>
+          <span class="org">Portail Emploi Canada</span>
+          <a href="mailto:contactportailemploicanada@gmail.com">contactportailemploicanada@gmail.com</a>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer"><strong>Portail Emploi</strong> Canada</div>
+
+    </div>
+  </div>
+
+</body>
+</html>
